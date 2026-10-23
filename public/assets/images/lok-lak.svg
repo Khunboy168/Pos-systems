@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 160" width="100" height="160">
+  <defs>
+    <linearGradient id="plateRim" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#e2e8f0"/>
+    </linearGradient>
+  </defs>
+  <!-- Main Plate -->
+  <ellipse cx="50" cy="95" rx="46" ry="38" fill="url(#plateRim)" stroke="#cbd5e1" stroke-width="2"/>
+  <ellipse cx="50" cy="95" rx="38" ry="30" fill="#ffffff"/>
+  <!-- Lettuce bed -->
+  <path d="M 20 85 Q 35 70 50 80 Q 65 68 80 82 Q 78 105 50 110 Q 24 105 20 85 Z" fill="#81c784" opacity="0.8"/>
+  <!-- Tomato slices -->
+  <circle cx="30" cy="85" r="7" fill="#e53935"/>
+  <circle cx="30" cy="85" r="4" fill="#ef5350"/>
+  <circle cx="42" cy="78" r="7" fill="#e53935"/>
+  <!-- Stir-fried Beef cubes -->
+  <rect x="42" y="86" width="12" height="10" rx="3" fill="#4e342e"/>
+  <rect x="56" y="82" width="14" height="11" rx="3" fill="#3e2723"/>
+  <rect x="50" y="94" width="12" height="10" rx="3" fill="#5d4037"/>
+  <rect x="36" y="96" width="11" height="9" rx="3" fill="#4e342e"/>
+  <rect x="62" y="92" width="10" height="10" rx="3" fill="#3e2723"/>
+  <!-- Fried Egg on top -->
+  <ellipse cx="52" cy="86" rx="12" ry="9" fill="#ffffff" stroke="#fff9c4" stroke-width="1.5"/>
+  <circle cx="52" cy="86" r="4.5" fill="#fbc02d"/>
+  <!-- Kampot Pepper Lime Sauce Dip bowl -->
+  <circle cx="75" cy="115" r="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1"/>
+  <circle cx="75" cy="115" r="7" fill="#263238"/>
+  <circle cx="74" cy="114" r="1" fill="#ffffff"/>
+  <circle cx="76" cy="116" r="0.8" fill="#ffffff"/>
+  <text x="50" y="148" font-family="'Arial Black', sans-serif" font-size="7" font-weight="900" fill="#3e2723" text-anchor="middle">BEEF LOK LAK</text>
+</svg>

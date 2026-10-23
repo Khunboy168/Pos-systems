@@ -1,0 +1,56 @@
+<div class="tables-layout fade-in">
+  <div class="tables-header-bar">
+    <div>
+      <h2 class="section-title">Floor Plan &amp; Table Management</h2>
+      <p class="section-subtitle">Real-time cafe table occupancy and active bills</p>
+    </div>
+    <div class="table-legend">
+      <span class="legend-item"><span class="legend-dot free"></span> Free</span>
+      <span class="legend-item"><span class="legend-dot busy"></span> Occupied</span>
+      <span class="legend-item"><span class="legend-dot bill"></span> Bill Printed</span>
+      <span class="legend-item"><span class="legend-dot reserved"></span> Reserved</span>
+    </div>
+  </div>
+
+  <div class="tables-grid">
+    @for (table of productService.tables(); track table.id) {
+      <div class="table-card" [ngClass]="'status-' + table.status">
+        <div class="table-card-top">
+          <span class="table-name">{{ table.name }}</span>
+          <span class="table-area-tag">{{ table.area }}</span>
+        </div>
+        <div class="table-card-body">
+          <div class="table-seats"><i class="fa-solid fa-user-group"></i> {{ table.seats }} Seats</div>
+          @if (table.status === 'occupied' || table.status === 'bill_printed') {
+            <div class="table-order-info">
+              <div class="table-bill-amount">${{ table.orderTotal | number: '1.2-2' }}</div>
+              <div class="table-time"><i class="fa-solid fa-clock"></i> {{ table.occupiedSince }}</div>
+            </div>
+          } @else if (table.status === 'reserved') {
+            <div class="table-reserved-text">Reserved · 18:30</div>
+          } @else {
+            <div class="table-available-text">Available</div>
+          }
+        </div>
+        <div class="table-card-footer">
+          @if (table.status === 'available') {
+            <button type="button" class="btn-table-action btn-open" (click)="selectTable(table)">
+              Open &amp; Order
+            </button>
+          } @else if (table.status === 'occupied' || table.status === 'bill_printed') {
+            <button type="button" class="btn-table-action btn-order" (click)="selectTable(table)">
+              Add Items
+            </button>
+            <button type="button" class="btn-table-action btn-settle" (click)="clearTableBill(table)">
+              Settle Bill
+            </button>
+          } @else {
+            <button type="button" class="btn-table-action btn-open" (click)="productService.setTableStatus(table.name, 'available')">
+              Unreserve
+            </button>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>

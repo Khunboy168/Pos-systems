@@ -1,0 +1,79 @@
+<div class="customer-display-container fade-in">
+  <div class="display-header">
+    <div class="display-logo"><i class="fa-solid fa-mug-hot"></i> Brown Cafe &amp; Bistro</div>
+    <div class="display-rate">Rate: $1 = {{ productService.exchangeRate().toLocaleString() }} ៛</div>
+  </div>
+
+  <div class="display-content-grid">
+    <!-- Left: Current Order Items -->
+    <div class="display-order-panel">
+      <h3 class="panel-heading">Your Order / ការបញ្ជាទិញ</h3>
+      <div class="display-items-list">
+        @for (item of productService.cart(); track item.cartItemId) {
+          <div class="display-item-row">
+            <div class="display-item-info">
+              <span class="item-qty">{{ item.quantity }}×</span>
+              <span class="item-name">{{ item.product.name }}</span>
+              @if (item.product.khmerName) {
+                <span class="item-km khmer-font">({{ item.product.khmerName }})</span>
+              }
+            </div>
+            <div class="display-item-price">${{ item.subtotal | number: '1.2-2' }}</div>
+          </div>
+        } @empty {
+          <div class="display-slideshow">
+            <div class="slide-banner">
+              <h2>Welcome to Brown Cafe!</h2>
+              <p class="khmer-font">សូមស្វាគមន៍មកកាន់ ហាងកាហ្វេ ប្រោន</p>
+              <div class="slide-featured">
+                <img src="assets/images/coffee-latte.svg" alt="Latte" class="slide-img" />
+                <div class="slide-info">
+                  <h3>Handcrafted Artisanal Coffee</h3>
+                  <p>Enjoy our freshly extracted espresso &amp; local robusta</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Totals Footer -->
+      <div class="display-totals-card">
+        <div class="disp-total-row">
+          <span>Total USD:</span>
+          <span class="disp-usd">${{ productService.cartTotal() | number: '1.2-2' }}</span>
+        </div>
+        <div class="disp-total-row">
+          <span>Total KHR:</span>
+          <span class="disp-khr">{{ productService.cartTotalKhr().toLocaleString() }} ៛</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Dynamic QR or Promotions -->
+    <div class="display-qr-panel">
+      @if (productService.cart().length > 0) {
+        <div class="qr-scan-card">
+          <div class="qr-bank-logo">
+            <span class="bank-pill">ABA KHQR</span>
+            <span class="bank-pill bakong">Bakong</span>
+          </div>
+          <h3>Scan to Pay with Any Banking App</h3>
+          <p class="khmer-font">ស្កេនទូទាត់ជាមួយ KHQR គ្រប់ធនាគារ</p>
+          <div class="qr-code-large">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=KHQR_BROWNCAFE_USD_{{ productService.cartTotal() }}" alt="KHQR" />
+          </div>
+          <div class="qr-amount-pill">
+            ${{ productService.cartTotal() | number: '1.2-2' }} · {{ productService.cartTotalKhr().toLocaleString() }} ៛
+          </div>
+        </div>
+      } @else {
+        <div class="display-promo-card">
+          <h3>Try our Brown Sugar Milk Tea</h3>
+          <p class="khmer-font">តែទឹកដោះគោគុជស្ករត្នោតធម្មជាតិ</p>
+          <img src="assets/images/milk-tea.svg" alt="Promo" class="promo-img" />
+        </div>
+      }
+    </div>
+  </div>
+</div>

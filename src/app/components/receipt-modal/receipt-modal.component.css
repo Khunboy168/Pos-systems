@@ -1,0 +1,193 @@
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.modal-card {
+  background: #ffffff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 440px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+.modal-header {
+  padding: 1.15rem 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+}
+
+.close-x {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  color: #94a3b8;
+  cursor: pointer;
+}
+
+.modal-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.65rem;
+  background: #f8fafc;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: none;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-primary { background: #4f46e5; color: #fff; }
+.btn-secondary { background: #e2e8f0; color: #334155; }
+
+/* 80mm Receipt */
+.receipt-container {
+  background: #ffffff;
+  padding: 1.5rem;
+  color: #000000;
+  font-family: 'JetBrains Mono', 'Kantumruy Pro', monospace;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  overflow-y: auto;
+}
+
+.receipt-header {
+  text-align: center;
+}
+
+.receipt-logo {
+  font-size: 1.75rem;
+}
+
+.receipt-shop-name {
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.receipt-shop-km {
+  font-size: 0.825rem;
+  font-weight: 700;
+}
+
+.receipt-sub {
+  font-size: 0.7rem;
+  color: #475569;
+}
+
+.receipt-divider {
+  text-align: center;
+  color: #94a3b8;
+  margin: 0.4rem 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.receipt-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.meta-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.receipt-items-table {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.receipt-item-line .line-top {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 700;
+}
+
+.line-mods {
+  font-size: 0.7rem;
+  color: #475569;
+  padding-left: 0.85rem;
+}
+
+.receipt-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.sum-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.sum-row.total-usd {
+  font-size: 1.1rem;
+  font-weight: 900;
+}
+
+.sum-row.total-khr {
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.sum-row.rate-row {
+  font-size: 0.7rem;
+  color: #64748b;
+}
+
+.sum-row.change-highlight {
+  font-weight: 900;
+  background: #f1f5f9;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+}
+
+.receipt-footer {
+  text-align: center;
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.wifi-info {
+  font-size: 0.72rem;
+}
+
+.khmer-thanks {
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+.en-thanks {
+  font-size: 0.75rem;
+}

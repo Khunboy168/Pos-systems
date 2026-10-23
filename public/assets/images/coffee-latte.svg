@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 160" width="100" height="160">
+  <defs>
+    <linearGradient id="coffeeGlass" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.8"/>
+      <stop offset="25%" stop-color="#e0f2fe" stop-opacity="0.3"/>
+      <stop offset="75%" stop-color="#ffffff" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#bae6fd" stop-opacity="0.7"/>
+    </linearGradient>
+    <linearGradient id="coffeeBody" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#3e2723"/>
+      <stop offset="50%" stop-color="#5d4037"/>
+      <stop offset="75%" stop-color="#8d6e63"/>
+      <stop offset="100%" stop-color="#d7ccc8"/>
+    </linearGradient>
+    <linearGradient id="milkFoam" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#f5ebe0"/>
+    </linearGradient>
+  </defs>
+  <!-- Straw -->
+  <line x1="65" y1="5" x2="48" y2="140" stroke="#0284c7" stroke-width="5" stroke-linecap="round"/>
+  <line x1="63" y1="5" x2="67" y2="5" stroke="#ffffff" stroke-width="2"/>
+  <!-- Cup Lid -->
+  <ellipse cx="50" cy="30" rx="36" ry="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+  <!-- Coffee Liquid Body -->
+  <path d="M 20 34 L 28 140 Q 28 150 36 150 L 64 150 Q 72 150 72 140 L 80 34 Z" fill="url(#coffeeBody)"/>
+  <!-- Milk Foam Top -->
+  <path d="M 21 34 Q 35 44 50 34 T 79 34 L 78 48 Q 65 56 50 48 T 22 48 Z" fill="url(#milkFoam)"/>
+  <!-- Ice cubes inside -->
+  <rect x="34" y="55" width="16" height="16" rx="4" fill="#ffffff" opacity="0.35" transform="rotate(12 34 55)"/>
+  <rect x="52" y="75" width="16" height="16" rx="4" fill="#ffffff" opacity="0.35" transform="rotate(-8 52 75)"/>
+  <rect x="36" y="95" width="16" height="16" rx="4" fill="#ffffff" opacity="0.3" transform="rotate(18 36 95)"/>
+  <!-- Cup Outline & Glass Reflection -->
+  <path d="M 18 30 L 27 142 Q 28 152 38 152 L 62 152 Q 72 152 73 142 L 82 30 Z" fill="url(#coffeeGlass)" stroke="#e2e8f0" stroke-width="1.5"/>
+  <line x1="26" y1="40" x2="33" y2="135" stroke="#ffffff" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+  <!-- Cafe Logo Stamp -->
+  <circle cx="50" cy="100" r="14" fill="#ffffff" opacity="0.9" stroke="#5d4037" stroke-width="1.5"/>
+  <text x="50" y="103" font-family="'Times New Roman', serif" font-size="7" font-weight="bold" fill="#3e2723" text-anchor="middle">LATTE</text>
+</svg>

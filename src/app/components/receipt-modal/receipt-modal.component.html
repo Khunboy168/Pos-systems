@@ -1,0 +1,127 @@
+<div class="modal-backdrop">
+  <div class="modal-card receipt-modal">
+    <div class="modal-header no-print">
+      <h3 class="modal-title">Receipt Preview (80mm)</h3>
+      <button type="button" class="close-x" (click)="closeModal()">✕</button>
+    </div>
+
+    <div class="receipt-container" id="printableReceipt">
+      @if (receipt(); as r) {
+        <div class="receipt-header">
+          <div class="receipt-logo">☕</div>
+          <div class="receipt-shop-name">BROWN CAFE &amp; BISTRO</div>
+          <div class="receipt-shop-km khmer-font">ហាងកាហ្វេ ប្រោន · Phnom Penh</div>
+          <div class="receipt-sub">Tel: 012 888 999 · VAT TIN: K001-90234812</div>
+        </div>
+
+        <div class="receipt-divider">------------------------------------------</div>
+
+        <div class="receipt-meta">
+          <div class="meta-row">
+            <span>Receipt: <strong>{{ r.receiptNo }}</strong></span>
+            <span>Queue: <strong>#{{ r.queueNo }}</strong></span>
+          </div>
+          <div class="meta-row">
+            <span>Date: {{ r.date }}</span>
+            <span>Cashier: {{ r.cashierName }}</span>
+          </div>
+          <div class="meta-row">
+            <span>Type: {{ r.orderType }}</span>
+            @if (r.tableName) {
+              <span>Table: {{ r.tableName }}</span>
+            }
+          </div>
+        </div>
+
+        <div class="receipt-divider">------------------------------------------</div>
+
+        <div class="receipt-items-table">
+          @for (item of r.items; track item.cartItemId) {
+            <div class="receipt-item-line">
+              <div class="line-top">
+                <span>{{ item.quantity }}× {{ item.product.name }}</span>
+                <span>${{ item.subtotal | number: '1.2-2' }}</span>
+              </div>
+              @if (item.product.allowCustomization) {
+                <div class="line-mods">
+                  {{ item.size }}, {{ item.drinkType }}, {{ item.sweetness }} Sugar, {{ item.ice }} Ice
+                  @for (add of item.addOns; track add.name) {
+                    , +{{ add.name }}
+                  }
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="receipt-divider">------------------------------------------</div>
+
+        <div class="receipt-summary">
+          <div class="sum-row">
+            <span>Subtotal:</span>
+            <span>${{ r.subtotal | number: '1.2-2' }}</span>
+          </div>
+          @if (r.discountAmount > 0) {
+            <div class="sum-row">
+              <span>Discount ({{ r.discountPercent }}%):</span>
+              <span>-${{ r.discountAmount | number: '1.2-2' }}</span>
+            </div>
+          }
+          <div class="sum-row">
+            <span>VAT 10% (Included):</span>
+            <span>${{ r.tax | number: '1.2-2' }}</span>
+          </div>
+          <div class="sum-row total-usd">
+            <span>TOTAL USD:</span>
+            <span>${{ r.total | number: '1.2-2' }}</span>
+          </div>
+          <div class="sum-row total-khr">
+            <span>TOTAL KHR:</span>
+            <span>{{ r.totalKhr.toLocaleString() }} ៛</span>
+          </div>
+          <div class="sum-row rate-row">
+            <span>Rate: 1$ = {{ r.exchangeRate.toLocaleString() }} ៛</span>
+          </div>
+
+          <div class="receipt-divider">------------------------------------------</div>
+
+          <div class="sum-row">
+            <span>Payment:</span>
+            <span>{{ r.paymentMethod }}</span>
+          </div>
+          @if (r.paidUsd > 0) {
+            <div class="sum-row">
+              <span>Paid USD:</span>
+              <span>${{ r.paidUsd | number: '1.2-2' }}</span>
+            </div>
+          }
+          @if (r.paidKhr > 0) {
+            <div class="sum-row">
+              <span>Paid KHR:</span>
+              <span>{{ r.paidKhr.toLocaleString() }} ៛</span>
+            </div>
+          }
+          <div class="sum-row change-highlight">
+            <span>Change Given:</span>
+            <span>${{ r.changeUsd }} + {{ r.changeKhr.toLocaleString() }} ៛</span>
+          </div>
+        </div>
+
+        <div class="receipt-divider">------------------------------------------</div>
+
+        <div class="receipt-footer">
+          <div class="wifi-info">Wi-Fi: <strong>BrownCafe_Guest</strong> · Pass: <strong>coffee2026</strong></div>
+          <div class="khmer-thanks khmer-font">សូមអរគុណ! សូមអញ្ជើញមកពិសារម្តងទៀត!</div>
+          <div class="en-thanks">Thank you! Please visit us again.</div>
+        </div>
+      }
+    </div>
+
+    <div class="modal-footer no-print">
+      <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
+      <button type="button" class="btn btn-primary" (click)="printReceipt()">
+        🖨️ Print 80mm Receipt
+      </button>
+    </div>
+  </div>
+</div>

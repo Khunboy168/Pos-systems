@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 160" width="100" height="160">
+  <defs>
+    <linearGradient id="khmerGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#fff8e1"/>
+      <stop offset="28%" stop-color="#ffecb3"/>
+      <stop offset="30%" stop-color="#3e2723"/>
+      <stop offset="90%" stop-color="#1b0000"/>
+      <stop offset="100%" stop-color="#2d1500"/>
+    </linearGradient>
+  </defs>
+  <!-- Straw -->
+  <line x1="68" y1="8" x2="52" y2="140" stroke="#ef4444" stroke-width="5" stroke-linecap="round"/>
+  <!-- Classic faceted glass tumbler -->
+  <path d="M 22 25 L 30 144 Q 30 152 38 152 L 62 152 Q 70 152 70 144 L 78 25 Z" fill="url(#khmerGrad)" stroke="#cbd5e1" stroke-width="1.5"/>
+  <!-- Condensed Milk demarcation layer line -->
+  <ellipse cx="50" cy="115" rx="16" ry="3" fill="#fff9c4" opacity="0.9"/>
+  <!-- Abundant Ice cubes in Khmer coffee -->
+  <rect x="36" y="38" width="18" height="18" rx="4" fill="#ffffff" opacity="0.38" transform="rotate(10 36 38)"/>
+  <rect x="52" y="44" width="18" height="18" rx="4" fill="#ffffff" opacity="0.35" transform="rotate(-15 52 44)"/>
+  <rect x="38" y="70" width="18" height="18" rx="4" fill="#ffffff" opacity="0.32" transform="rotate(20 38 70)"/>
+  <rect x="50" y="80" width="16" height="16" rx="4" fill="#ffffff" opacity="0.3" transform="rotate(-5 50 80)"/>
+  <!-- Glass Facet reflections -->
+  <line x1="28" y1="30" x2="35" y2="140" stroke="#ffffff" stroke-width="2.5" opacity="0.5"/>
+  <line x1="72" y1="30" x2="65" y2="140" stroke="#ffffff" stroke-width="1.5" opacity="0.3"/>
+  <circle cx="50" cy="76" r="14" fill="#ffffff" opacity="0.9" stroke="#3e2723" stroke-width="1.5"/>
+  <text x="50" y="79" font-family="'Kantumruy Pro', sans-serif" font-size="5" font-weight="900" fill="#2d1500" text-anchor="middle">កាហ្វេទឹកដោះគោ</text>
+</svg>

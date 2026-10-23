@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 160" width="100" height="160">
+  <defs>
+    <linearGradient id="cocaGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#b71c1c"/>
+      <stop offset="35%" stop-color="#f44336"/>
+      <stop offset="65%" stop-color="#d32f2f"/>
+      <stop offset="100%" stop-color="#880e4f"/>
+    </linearGradient>
+    <linearGradient id="canMetal" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#cfd8dc"/>
+      <stop offset="50%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#90a4ae"/>
+    </linearGradient>
+  </defs>
+  <!-- Can top rim -->
+  <ellipse cx="50" cy="18" rx="36" ry="9" fill="url(#canMetal)"/>
+  <ellipse cx="50" cy="18" rx="28" ry="6" fill="#78909c"/>
+  <ellipse cx="50" cy="16" rx="10" ry="3" fill="#cfd8dc"/>
+  <!-- Can body -->
+  <path d="M 14 18 Q 14 26 16 32 L 16 142 Q 16 148 20 152 L 80 152 Q 84 148 84 142 L 84 32 Q 86 26 86 18 Z" fill="url(#cocaGrad)"/>
+  <!-- Highlights -->
+  <rect x="22" y="28" width="6" height="116" rx="3" fill="#ffffff" opacity="0.3"/>
+  <rect x="30" y="28" width="2" height="116" rx="1" fill="#ffffff" opacity="0.15"/>
+  <!-- White ribbon wave -->
+  <path d="M 16 90 Q 40 70 60 95 T 84 80 L 84 94 Q 60 84 40 109 T 16 104 Z" fill="#ffffff" opacity="0.95"/>
+  <!-- Text -->
+  <text x="50" y="75" font-family="'Brush Script MT', 'Segoe Script', cursive, sans-serif" font-size="20" font-weight="bold" fill="#ffffff" text-anchor="middle" font-style="italic">Coca</text>
+  <text x="50" y="125" font-family="Arial, sans-serif" font-size="7" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="2">ORIGINAL</text>
+  <!-- Bottom rim -->
+  <ellipse cx="50" cy="150" rx="30" ry="5" fill="url(#canMetal)" opacity="0.8"/>
+</svg>

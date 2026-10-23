@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 160" width="100" height="160">
+  <defs>
+    <linearGradient id="stingGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#b71c1c"/>
+      <stop offset="35%" stop-color="#e53935"/>
+      <stop offset="70%" stop-color="#ff1744"/>
+      <stop offset="100%" stop-color="#880e4f"/>
+    </linearGradient>
+    <linearGradient id="yellowBolt" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffea00"/>
+      <stop offset="100%" stop-color="#ff9100"/>
+    </linearGradient>
+    <linearGradient id="rimMetal" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#cfd8dc"/>
+      <stop offset="50%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#78909c"/>
+    </linearGradient>
+  </defs>
+  <!-- Cap / Rim -->
+  <ellipse cx="50" cy="18" rx="34" ry="8" fill="url(#rimMetal)"/>
+  <ellipse cx="50" cy="18" rx="26" ry="5" fill="#37474f"/>
+  <!-- Body (Sleek energy drink can) -->
+  <path d="M 18 18 Q 18 24 20 30 L 20 144 Q 20 150 24 152 L 76 152 Q 80 150 80 144 L 80 30 Q 82 24 82 18 Z" fill="url(#stingGrad)"/>
+  <!-- Lightning Bolt -->
+  <polygon points="56,38 42,74 52,74 44,115 62,68 50,68" fill="url(#yellowBolt)" filter="drop-shadow(0 0 4px #ffeb3b)"/>
+  <!-- STING Text -->
+  <text x="50" y="85" font-family="'Impact', Arial Black, sans-serif" font-size="16" font-style="italic" fill="#ffffff" text-anchor="middle" letter-spacing="2" transform="rotate(-90 50 85)">STING</text>
+  <!-- Ginseng Energy tag -->
+  <rect x="26" y="126" width="48" height="12" rx="3" fill="#ffebee" opacity="0.9"/>
+  <text x="50" y="135" font-family="Arial, sans-serif" font-size="6" font-weight="900" fill="#d50000" text-anchor="middle">ENERGY</text>
+  <!-- Bottom rim -->
+  <ellipse cx="50" cy="150" rx="28" ry="4" fill="url(#rimMetal)" opacity="0.8"/>
+</svg>

@@ -1,0 +1,75 @@
+<div class="reports-pane fade-in">
+  <div class="reports-header-bar">
+    <div>
+      <h2 class="section-title">Sales Analytics &amp; Reports</h2>
+      <p class="section-subtitle">Real-time revenue, orders, and payment mix</p>
+    </div>
+    <button type="button" class="btn btn-secondary" (click)="printReport()">
+      <i class="fa-solid fa-print"></i> Print Sales Report
+    </button>
+  </div>
+
+  <div class="reports-kpi-grid">
+    <div class="kpi-card">
+      <span class="kpi-label">Today's Revenue (USD)</span>
+      <span class="kpi-value">${{ (productService.currentShift()?.totalSalesUsd || 0) | number: '1.2-2' }}</span>
+    </div>
+    <div class="kpi-card">
+      <span class="kpi-label">Today's Revenue (KHR)</span>
+      <span class="kpi-value">{{ (productService.currentShift()?.totalSalesKhr || 0).toLocaleString() }} ៛</span>
+    </div>
+    <div class="kpi-card">
+      <span class="kpi-label">Orders Completed</span>
+      <span class="kpi-value">{{ productService.transactions().length }}</span>
+    </div>
+    <div class="kpi-card">
+      <span class="kpi-label">Average Bill</span>
+      <span class="kpi-value">
+        ${{ (productService.transactions().length > 0 ? (productService.currentShift()?.totalSalesUsd || 0) / productService.transactions().length : 0) | number: '1.2-2' }}
+      </span>
+    </div>
+  </div>
+
+  <!-- Transactions History Table -->
+  <div class="card reports-table-card">
+    <h3 class="card-title">Completed Orders History</h3>
+    <table class="exam-table">
+      <thead>
+        <tr>
+          <th>Receipt #</th>
+          <th>Queue</th>
+          <th>Type</th>
+          <th>Table</th>
+          <th>Total ($)</th>
+          <th>Total (៛)</th>
+          <th>Payment Method</th>
+          <th>Time</th>
+          <th class="no-print">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (txn of productService.transactions(); track txn.id) {
+          <tr>
+            <td><strong>{{ txn.receiptNo }}</strong></td>
+            <td><span class="id-badge">#{{ txn.queueNo }}</span></td>
+            <td>{{ txn.orderType }}</td>
+            <td>{{ txn.tableName || 'N/A' }}</td>
+            <td class="money highlight">${{ txn.total | number: '1.2-2' }}</td>
+            <td class="money">{{ txn.totalKhr.toLocaleString() }} ៛</td>
+            <td>{{ txn.paymentMethod }}</td>
+            <td>{{ txn.date }}</td>
+            <td class="no-print">
+              <button type="button" class="btn-action btn-edit" (click)="viewReceipt.emit(txn)">
+                Receipt
+              </button>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="9" class="empty-state">No transactions recorded yet today</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

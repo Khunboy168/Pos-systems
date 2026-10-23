@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 160" width="100" height="160">
+  <defs>
+    <linearGradient id="passionGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#f57f17"/>
+      <stop offset="50%" stop-color="#fbc02d"/>
+      <stop offset="85%" stop-color="#fff176"/>
+      <stop offset="100%" stop-color="#ffee58"/>
+    </linearGradient>
+  </defs>
+  <line x1="65" y1="5" x2="48" y2="140" stroke="#f59e0b" stroke-width="5" stroke-linecap="round"/>
+  <ellipse cx="50" cy="30" rx="36" ry="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+  <path d="M 20 34 L 28 140 Q 28 150 36 150 L 64 150 Q 72 150 72 140 L 80 34 Z" fill="url(#passionGrad)"/>
+  <!-- Passion fruit seeds floating -->
+  <circle cx="34" cy="55" r="2.5" fill="#212121"/>
+  <circle cx="48" cy="65" r="2.5" fill="#212121"/>
+  <circle cx="62" cy="72" r="2" fill="#212121"/>
+  <circle cx="38" cy="95" r="2.5" fill="#212121"/>
+  <circle cx="56" cy="110" r="2" fill="#212121"/>
+  <circle cx="42" cy="125" r="2.5" fill="#212121"/>
+  <circle cx="50" cy="138" r="2.2" fill="#212121"/>
+  <rect x="36" y="50" width="16" height="16" rx="4" fill="#ffffff" opacity="0.4" transform="rotate(10 36 50)"/>
+  <rect x="52" y="80" width="16" height="16" rx="4" fill="#ffffff" opacity="0.35" transform="rotate(-12 52 80)"/>
+  <!-- Lemon slice floating on top -->
+  <circle cx="38" cy="40" r="9" fill="#ffeb3b" stroke="#fdd835" stroke-width="2"/>
+  <circle cx="38" cy="40" r="7" fill="#fffde7"/>
+  <path d="M 18 30 L 27 142 Q 28 152 38 152 L 62 152 Q 72 152 73 142 L 82 30 Z" fill="none" stroke="#e2e8f0" stroke-width="1.5"/>
+  <circle cx="50" cy="100" r="14" fill="#ffffff" opacity="0.95" stroke="#f57f17" stroke-width="1.5"/>
+  <text x="50" y="103" font-family="'Arial Black', sans-serif" font-size="5" font-weight="900" fill="#f57f17" text-anchor="middle">PASSION</text>
+</svg>

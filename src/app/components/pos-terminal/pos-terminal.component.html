@@ -1,0 +1,487 @@
+<div class="pos-terminal-layout fade-in">
+  <!-- Left Section: Category Tabs & Product Grid (65%) -->
+  <div class="pos-left-panel">
+    <!-- Category Pills -->
+    <div class="pos-categories-bar">
+      <button
+        type="button"
+        class="pos-cat-btn"
+        [class.active]="cashierCategory() === 'All'"
+        (click)="cashierCategory.set('All')"
+      >
+        All Items
+      </button>
+      @for (cat of productService.categories(); track cat) {
+        <button
+          type="button"
+          class="pos-cat-btn"
+          [class.active]="cashierCategory() === cat"
+          (click)="cashierCategory.set(cat)"
+        >
+          {{ cat }}
+        </button>
+      }
+    </div>
+
+    <!-- Quick Search & Barcode Scan -->
+    <div class="pos-search-bar">
+      <i class="fa-solid fa-magnifying-glass search-icon"></i>
+      <input
+        type="text"
+        class="pos-search-input"
+        placeholder="Search coffee, tea, soft drink, beer... (F2)"
+        [ngModel]="cashierSearch()"
+        (ngModelChange)="cashierSearch.set($event)"
+      />
+      @if (productService.heldOrders().length > 0) {
+        <div class="held-badge" (click)="recallOrder(productService.heldOrders()[0].id)">
+          <i class="fa-solid fa-circle-pause"></i> Held Orders ({{ productService.heldOrders().length }})
+        </div>
+      }
+    </div>
+
+    <!-- Product Card Grid -->
+    <div class="pos-product-grid">
+      @for (product of cashierFilteredProducts(); track product.id) {
+        <div
+          class="pos-product-card"
+          [class.sold-out]="product.quantity <= 0"
+          (click)="onProductClick(product)"
+        >
+          <div class="card-img-wrapper">
+            <img [src]="product.imageUrl" [alt]="product.name" class="pos-card-img" />
+            @if (product.allowCustomization) {
+              <span class="custom-badge">Custom</span>
+            }
+            @if (product.quantity <= 0) {
+              <div class="sold-out-overlay">SOLD OUT</div>
+            }
+          </div>
+          <div class="card-info">
+            <div class="card-name-en">{{ product.name }}</div>
+            @if (product.khmerName) {
+              <div class="card-name-km khmer-font">{{ product.khmerName }}</div>
+            }
+            <div class="card-price-row">
+              <span class="price-usd">${{ product.price | number: '1.2-2' }}</span>
+              <span class="price-khr">{{ (product.price * 4100) | number }} ៛</span>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Right Section: Order Cart & Dual-Currency Summary (35%) -->
+  <div class="pos-right-panel">
+    <!-- Order Type & Table Header -->
+    <div class="cart-top-bar">
+      <div class="order-type-switch">
+        <button
+          type="button"
+          class="order-type-btn"
+          [class.active]="productService.activeOrderType() === 'Dine-in'"
+          (click)="productService.activeOrderType.set('Dine-in')"
+        >
+          <i class="fa-solid fa-utensils"></i> Dine-in
+        </button>
+        <button
+          type="button"
+          class="order-type-btn"
+          [class.active]="productService.activeOrderType() === 'Takeaway'"
+          (click)="productService.activeOrderType.set('Takeaway')"
+        >
+          <i class="fa-solid fa-bag-shopping"></i> Takeaway
+        </button>
+        <button
+          type="button"
+          class="order-type-btn"
+          [class.active]="productService.activeOrderType() === 'Delivery'"
+          (click)="productService.activeOrderType.set('Delivery')"
+        >
+          <i class="fa-solid fa-motorcycle"></i> Grab/Delivery
+        </button>
+      </div>
+
+      <div class="cart-context-row">
+        @if (productService.activeOrderType() === 'Dine-in') {
+          <div class="table-badge">
+            <i class="fa-solid fa-chair"></i>
+            <select
+              class="table-select"
+              [ngModel]="productService.selectedTable()"
+              (ngModelChange)="productService.selectedTable.set($event)"
+            >
+              @for (t of productService.tables(); track t.id) {
+                <option [value]="t.name">{{ t.name }} ({{ t.area }})</option>
+              }
+            </select>
+          </div>
+        }
+        <input
+          type="text"
+          class="customer-input"
+          placeholder="Member Phone / Customer Name"
+          [(ngModel)]="customerName"
+        />
+      </div>
+    </div>
+
+    <!-- Order Items List -->
+    <div class="cart-items-container">
+      @for (item of productService.cart(); track item.cartItemId) {
+        <div class="cart-item-row">
+          <div class="item-main">
+            <div class="item-title-row">
+              <span class="item-name">{{ item.product.name }}</span>
+              <span class="item-subtotal">${{ item.subtotal | number: '1.2-2' }}</span>
+            </div>
+            @if (item.product.allowCustomization) {
+              <div class="item-modifiers">
+                <span class="mod-pill">{{ item.size }}</span>
+                <span class="mod-pill">{{ item.drinkType }}</span>
+                <span class="mod-pill">{{ item.sweetness }} Sugar</span>
+                <span class="mod-pill">{{ item.ice }} Ice</span>
+                @for (add of item.addOns; track add.name) {
+                  <span class="mod-pill add-on">+{{ add.name }}</span>
+                }
+                @if (item.notes) {
+                  <span class="mod-note">Note: {{ item.notes }}</span>
+                }
+              </div>
+            }
+            <div class="item-bottom-controls">
+              <div class="qty-stepper">
+                <button type="button" class="btn-step" (click)="updateCartQty(item.cartItemId, item.quantity - 1)">−</button>
+                <span class="qty-display">{{ item.quantity }}</span>
+                <button type="button" class="btn-step" (click)="updateCartQty(item.cartItemId, item.quantity + 1)">+</button>
+              </div>
+              <span class="unit-price-display">@ ${{ item.unitPrice | number: '1.2-2' }}</span>
+              <button type="button" class="remove-item-btn" (click)="removeFromCart(item.cartItemId)" title="Remove item">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      } @empty {
+        <div class="cart-empty-state">
+          <i class="fa-solid fa-cart-shopping empty-cart-icon"></i>
+          <p class="empty-cart-text">Cart is empty</p>
+          <p class="empty-cart-sub">Tap any beverage, coffee, or food to build order</p>
+        </div>
+      }
+    </div>
+
+    <!-- Order Summary & Cambodian Dual-Currency Totals -->
+    <div class="cart-summary-section">
+      <!-- Discounts Row -->
+      <div class="discount-buttons-row">
+        <span class="discount-label">Discount:</span>
+        <button type="button" class="btn-disc" [class.active]="discountPercent === 0" (click)="setDiscount(0)">0%</button>
+        <button type="button" class="btn-disc" [class.active]="discountPercent === 5" (click)="setDiscount(5)">5%</button>
+        <button type="button" class="btn-disc" [class.active]="discountPercent === 10" (click)="setDiscount(10)">10%</button>
+        <button type="button" class="btn-disc" [class.active]="discountPercent === 20" (click)="setDiscount(20)">20% (Mgr)</button>
+      </div>
+
+      <div class="summary-line">
+        <span>Subtotal:</span>
+        <span class="money">${{ productService.cartSubtotal() | number: '1.2-2' }}</span>
+      </div>
+
+      @if (productService.discountPercent() > 0) {
+        <div class="summary-line discount-line">
+          <span>Discount ({{ productService.discountPercent() }}%):</span>
+          <span class="money">-${{ productService.cartDiscountAmount() | number: '1.2-2' }}</span>
+        </div>
+      }
+
+      <div class="summary-line">
+        <span>VAT 10% (Cambodia Tax):</span>
+        <span class="money">${{ productService.cartTax() | number: '1.2-2' }}</span>
+      </div>
+
+      <div class="grand-total-box">
+        <div class="total-usd-row">
+          <span class="total-label">TOTAL USD:</span>
+          <span class="total-val-usd">${{ productService.cartTotal() | number: '1.2-2' }}</span>
+        </div>
+        <div class="total-khr-row">
+          <span class="khr-label">TOTAL KHR:</span>
+          <span class="total-val-khr">{{ productService.cartTotalKhr().toLocaleString() }} ៛</span>
+        </div>
+      </div>
+
+      <!-- Action Buttons Toolbar -->
+      <div class="cart-actions-grid">
+        <button type="button" class="btn-cart-action btn-hold" (click)="holdOrder()" [disabled]="productService.cart().length === 0">
+          <i class="fa-solid fa-circle-pause"></i> Hold
+        </button>
+        <button type="button" class="btn-cart-action btn-send" (click)="productService.sendToKitchen(); toastTriggered.emit({ message: 'Order sent to kitchen & bar!', type: 'success' })" [disabled]="productService.cart().length === 0">
+          <i class="fa-solid fa-bell-concierge"></i> Send KOT
+        </button>
+        <button type="button" class="btn-cart-action btn-clear" (click)="clearCart()" [disabled]="productService.cart().length === 0">
+          <i class="fa-solid fa-trash-can"></i> Clear
+        </button>
+      </div>
+
+      <!-- Big Pay Button -->
+      <button
+        type="button"
+        class="btn-pay-giant"
+        (click)="openPaymentDialog()"
+        [disabled]="productService.cart().length === 0"
+      >
+        <span><i class="fa-solid fa-credit-card"></i> PAY NOW (${{ productService.cartTotal() | number: '1.2-2' }} · {{ productService.cartTotalKhr().toLocaleString() }} ៛)</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- DRINK MODIFIER DIALOG -->
+@if (showCustomModal()) {
+  <div class="modal-backdrop">
+    <div class="modal-card modifier-dialog">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title">{{ customizingProduct()?.name }}</h3>
+          @if (customizingProduct()?.khmerName) {
+            <div class="modal-sub-km khmer-font">{{ customizingProduct()?.khmerName }}</div>
+          }
+        </div>
+        <button type="button" class="close-x" (click)="closeCustomModal()">✕</button>
+      </div>
+
+      <div class="modal-body modifier-body">
+        <div class="mod-group">
+          <label class="mod-label">Size*</label>
+          <div class="mod-options-row">
+            <button type="button" class="opt-btn" [class.active]="customSize() === 'S'" (click)="customSize.set('S')">
+              S (-$0.50)
+            </button>
+            <button type="button" class="opt-btn" [class.active]="customSize() === 'M'" (click)="customSize.set('M')">
+              M (Standard)
+            </button>
+            <button type="button" class="opt-btn" [class.active]="customSize() === 'L'" (click)="customSize.set('L')">
+              L (+$0.50)
+            </button>
+          </div>
+        </div>
+
+        <div class="mod-group">
+          <label class="mod-label">Type*</label>
+          <div class="mod-options-row">
+            <button type="button" class="opt-btn" [class.active]="customDrinkType() === 'Hot'" (click)="customDrinkType.set('Hot')">
+              Hot
+            </button>
+            <button type="button" class="opt-btn" [class.active]="customDrinkType() === 'Iced'" (click)="customDrinkType.set('Iced')">
+              Iced
+            </button>
+            <button type="button" class="opt-btn" [class.active]="customDrinkType() === 'Frappe'" (click)="customDrinkType.set('Frappe')">
+              Frappe (+$0.50)
+            </button>
+          </div>
+        </div>
+
+        <div class="mod-group">
+          <label class="mod-label">Sugar Level*</label>
+          <div class="mod-options-row">
+            @for (s of sweetnessOptions; track s) {
+              <button type="button" class="opt-btn" [class.active]="customSweetness() === s" (click)="customSweetness.set(s)">
+                {{ s }}
+              </button>
+            }
+          </div>
+        </div>
+
+        <div class="mod-group">
+          <label class="mod-label">Ice Level*</label>
+          <div class="mod-options-row">
+            @for (ice of iceOptions; track ice) {
+              <button type="button" class="opt-btn" [class.active]="customIce() === ice" (click)="customIce.set(ice)">
+                {{ ice }}
+              </button>
+            }
+          </div>
+        </div>
+
+        <div class="mod-group">
+          <label class="mod-label">Add-ons</label>
+          <div class="mod-options-row">
+            <button type="button" class="opt-btn" [class.active]="isAddOnSelected('Extra Shot')" (click)="toggleAddOn('Extra Shot', 0.5)">
+              +Extra Shot ($0.50)
+            </button>
+            <button type="button" class="opt-btn" [class.active]="isAddOnSelected('Oat Milk')" (click)="toggleAddOn('Oat Milk', 0.75)">
+              +Oat Milk ($0.75)
+            </button>
+            <button type="button" class="opt-btn" [class.active]="isAddOnSelected('Boba Pearls')" (click)="toggleAddOn('Boba Pearls', 0.5)">
+              +Boba ($0.50)
+            </button>
+            <button type="button" class="opt-btn" [class.active]="isAddOnSelected('Cheese Foam')" (click)="toggleAddOn('Cheese Foam', 0.75)">
+              +Cheese Foam ($0.75)
+            </button>
+          </div>
+        </div>
+
+        <div class="mod-group">
+          <label class="mod-label">Special Preparation Note</label>
+          <input type="text" class="form-input" placeholder="e.g. Extra hot, no lid..." [(ngModel)]="customNotes" />
+        </div>
+
+        <div class="mod-group qty-group">
+          <label class="mod-label">Quantity</label>
+          <div class="qty-stepper large">
+            <button type="button" class="btn-step" (click)="customQty.set(customQty() > 1 ? customQty() - 1 : 1)">−</button>
+            <span class="qty-display">{{ customQty() }}</span>
+            <button type="button" class="btn-step" (click)="customQty.set(customQty() + 1)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeCustomModal()">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="confirmCustomization()">
+          Add to Order (${{ customTotalPrice() | number: '1.2-2' }})
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- CAMBODIAN MULTI-PAYMENT MODAL -->
+@if (showPaymentModal()) {
+  <div class="modal-backdrop">
+    <div class="modal-card payment-modal">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title">Complete Payment</h3>
+          <div class="modal-sub">
+            Total: <strong>${{ productService.cartTotal() | number: '1.2-2' }}</strong> = <strong>{{ productService.cartTotalKhr().toLocaleString() }} ៛</strong>
+          </div>
+        </div>
+        <button type="button" class="close-x" (click)="closePaymentDialog()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="pay-method-tabs">
+          <button type="button" class="pay-tab-btn" [class.active]="paymentTab() === 'cash'" (click)="paymentTab.set('cash')">
+            <i class="fa-solid fa-money-bill-wave"></i> Cash (Mixed USD / KHR)
+          </button>
+          <button type="button" class="pay-tab-btn" [class.active]="paymentTab() === 'khqr'" (click)="switchToKhqrTab()">
+            <i class="fa-solid fa-qrcode"></i> ABA KHQR (Bakong)
+          </button>
+          <button type="button" class="pay-tab-btn" [class.active]="paymentTab() === 'card'" (click)="paymentTab.set('card')">
+            <i class="fa-solid fa-credit-card"></i> Card
+          </button>
+          <button type="button" class="pay-tab-btn" [class.active]="paymentTab() === 'grab'" (click)="paymentTab.set('grab')">
+            <i class="fa-solid fa-motorcycle"></i> Grab/Delivery
+          </button>
+        </div>
+
+        @if (paymentTab() === 'cash') {
+          <div class="cash-input-section">
+            <div class="dual-inputs-grid">
+              <div class="form-group">
+                <label>USD Received ($)</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  class="form-input money-input"
+                  placeholder="0.00"
+                  [ngModel]="usdReceived()"
+                  (ngModelChange)="usdReceived.set(+($event || 0))"
+                />
+                <div class="quick-chips">
+                  <button type="button" class="chip" (click)="setQuickCashUsd(1)">$1</button>
+                  <button type="button" class="chip" (click)="setQuickCashUsd(5)">$5</button>
+                  <button type="button" class="chip" (click)="setQuickCashUsd(10)">$10</button>
+                  <button type="button" class="chip" (click)="setQuickCashUsd(20)">$20</button>
+                  <button type="button" class="chip" (click)="setExactCash()">Exact</button>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>KHR Received (៛)</label>
+                <input
+                  type="number"
+                  step="100"
+                  class="form-input money-input"
+                  placeholder="0"
+                  [ngModel]="khrReceived()"
+                  (ngModelChange)="khrReceived.set(+($event || 0))"
+                />
+                <div class="quick-chips">
+                  <button type="button" class="chip" (click)="setQuickCashKhr(10000)">10,000៛</button>
+                  <button type="button" class="chip" (click)="setQuickCashKhr(20000)">20,000៛</button>
+                  <button type="button" class="chip" (click)="setQuickCashKhr(50000)">50,000៛</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="change-display-card" [class.insufficient]="mixedChange().shortCents > 0">
+              @if (mixedChange().shortCents > 0) {
+                <div class="change-status alert">
+                  ⚠️ Short by: ${{ (mixedChange().shortCents / 100) | number: '1.2-2' }} ({{ ((mixedChange().shortCents / 100) * 4100) | number }} ៛)
+                </div>
+              } @else {
+                <div class="change-status success">
+                  <span>CHANGE TO GIVE CUSTOMER:</span>
+                  <div class="change-amounts">
+                    <span class="change-usd">${{ mixedChange().changeUsd }} USD</span>
+                    <span class="change-plus">+</span>
+                    <span class="change-khr">{{ mixedChange().changeKhr.toLocaleString() }} ៛ KHR</span>
+                  </div>
+                  <div class="change-note">Remainder rounded to nearest 100 ៛ note</div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        @if (paymentTab() === 'khqr') {
+          <div class="khqr-payment-view">
+            <div class="khqr-badge-header">
+              <span class="bank-pill">ABA PayWay</span>
+              <span class="bank-pill bakong">Bakong KHQR</span>
+            </div>
+            <div class="khqr-code-center">
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=KHQR_ORDER_{{ productService.cartTotal() }}" alt="KHQR" />
+              <div class="khqr-scan-line"></div>
+            </div>
+            <div class="khqr-amount-large">
+              ${{ productService.cartTotal() | number: '1.2-2' }} = {{ productService.cartTotalKhr().toLocaleString() }} ៛
+            </div>
+            <div class="khqr-timer">
+              ⏳ Waiting for bank payment... Expiring in: <strong>{{ khqrCountdown() }}s</strong>
+            </div>
+            <button type="button" class="btn btn-primary btn-simulate-pay" (click)="simulateKhqrPaymentSuccess()">
+              ⚡ Simulate Customer Paid (Instant Confirm)
+            </button>
+          </div>
+        }
+
+        @if (paymentTab() === 'card' || paymentTab() === 'grab') {
+          <div class="other-payment-view">
+            <p>Record payment of <strong>${{ productService.cartTotal() | number: '1.2-2' }}</strong> via external terminal or platform.</p>
+            <button type="button" class="btn btn-primary" (click)="submitCardOrGrabPayment(paymentTab() === 'card' ? 'Credit/Debit Card' : 'GrabFood Delivery')">
+              Confirm &amp; Complete Order
+            </button>
+          </div>
+        }
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closePaymentDialog()">Cancel</button>
+        @if (paymentTab() === 'cash') {
+          <button
+            type="button"
+            class="btn btn-pay"
+            (click)="submitCashPayment()"
+            [disabled]="mixedChange().shortCents > 0"
+          >
+            Complete Cash Sale ✓
+          </button>
+        }
+      </div>
+    </div>
+  </div>
+}

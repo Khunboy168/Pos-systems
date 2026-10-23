@@ -1,0 +1,187 @@
+<div class="shift-pane fade-in">
+  <div class="shift-header-card">
+    <div>
+      <h2 class="section-title">Cash Drawer &amp; Shift Management</h2>
+      <p class="section-subtitle">Balance float, record cash in/out, and generate Z-Report</p>
+    </div>
+    <div class="shift-actions-group">
+      @if (productService.currentShift()) {
+        <button type="button" class="btn btn-secondary" (click)="openCashMovementDialog()">
+          <i class="fa-solid fa-money-bill-transfer"></i> Cash In / Out
+        </button>
+        <button type="button" class="btn btn-danger" (click)="openCloseShiftDialog()">
+          <i class="fa-solid fa-lock"></i> Blind Close Shift (Z-Report)
+        </button>
+      } @else {
+        <button type="button" class="btn btn-primary" (click)="openShiftDialog()">
+          <i class="fa-solid fa-lock-open"></i> Open New Shift
+        </button>
+      }
+    </div>
+  </div>
+
+  @if (productService.currentShift(); as shift) {
+    <div class="shift-stats-grid">
+      <div class="stat-card">
+        <span class="stat-icon"><i class="fa-solid fa-user-tie"></i></span>
+        <div class="stat-body">
+          <span class="stat-label">Active Cashier</span>
+          <span class="stat-main">{{ shift.cashierName }}</span>
+          <span class="stat-sub">Shift #{{ shift.shiftNo }} · Opened at {{ shift.openedAt }}</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <span class="stat-icon"><i class="fa-solid fa-money-bill-wave"></i></span>
+        <div class="stat-body">
+          <span class="stat-label">Opening Float</span>
+          <span class="stat-main">${{ shift.openFloatUsd | number: '1.2-2' }}</span>
+          <span class="stat-sub">{{ shift.openFloatKhr.toLocaleString() }} ៛ KHR</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <span class="stat-icon"><i class="fa-solid fa-chart-line"></i></span>
+        <div class="stat-body">
+          <span class="stat-label">Today's Sales</span>
+          <span class="stat-main highlight">${{ shift.totalSalesUsd | number: '1.2-2' }}</span>
+          <span class="stat-sub">{{ shift.totalSalesKhr.toLocaleString() }} ៛ ({{ shift.orderCount }} orders)</span>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Cash Movement History -->
+  <div class="card shift-table-card">
+    <h3 class="card-title">Cash In / Cash Out Movements</h3>
+    <table class="exam-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Type</th>
+          <th>Amount</th>
+          <th>Currency</th>
+          <th>Reason</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (move of productService.cashMovements(); track move.id) {
+          <tr>
+            <td>{{ move.id }}</td>
+            <td>
+              <span class="pill" [class.pill-in]="move.type === 'IN'" [class.pill-out]="move.type === 'OUT'">
+                {{ move.type }}
+              </span>
+            </td>
+            <td class="money">{{ move.amount | number: '1.2-2' }}</td>
+            <td>{{ move.currency }}</td>
+            <td>{{ move.reason }}</td>
+            <td>{{ move.timestamp }}</td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="6" class="empty-state">No cash adjustments recorded during this shift</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- OPEN SHIFT MODAL -->
+@if (showOpenShiftModal()) {
+  <div class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Open Shift Float</h3>
+        <button type="button" class="close-x" (click)="showOpenShiftModal.set(false)">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Cashier Name</label>
+          <input type="text" class="form-input" [(ngModel)]="shiftCashierName" />
+        </div>
+        <div class="form-group">
+          <label>Starting USD Cash Float ($)</label>
+          <input type="number" class="form-input" [(ngModel)]="openUsdFloat" />
+        </div>
+        <div class="form-group">
+          <label>Starting KHR Cash Float (៛)</label>
+          <input type="number" step="100" class="form-input" [(ngModel)]="openKhrFloat" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="showOpenShiftModal.set(false)">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="confirmOpenShift()">Open Shift</button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- CASH IN/OUT MODAL -->
+@if (showCashMovementModal()) {
+  <div class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Record Cash In / Out</h3>
+        <button type="button" class="close-x" (click)="showCashMovementModal.set(false)">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Movement Type</label>
+          <select class="form-select" [(ngModel)]="movementType">
+            <option value="IN">Cash IN (Add cash to drawer)</option>
+            <option value="OUT">Cash OUT (Pay expense / supplier)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Currency</label>
+          <select class="form-select" [(ngModel)]="movementCurrency">
+            <option value="USD">USD ($)</option>
+            <option value="KHR">KHR (៛)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Amount</label>
+          <input type="number" class="form-input" [(ngModel)]="movementAmount" />
+        </div>
+        <div class="form-group">
+          <label>Reason / Note</label>
+          <input type="text" class="form-input" placeholder="e.g. Bought ice bags, change float..." [(ngModel)]="movementReason" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="showCashMovementModal.set(false)">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="confirmCashMovement()">Record Movement</button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- BLIND CLOSE SHIFT MODAL -->
+@if (showCloseShiftModal()) {
+  <div class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Blind Shift Close (Count Cash)</h3>
+        <button type="button" class="close-x" (click)="showCloseShiftModal.set(false)">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="section-subtitle">Count the physical cash in your drawer without looking at expected system totals:</p>
+        <div class="form-group">
+          <label>Counted USD ($)</label>
+          <input type="number" step="0.01" class="form-input money-input" [(ngModel)]="countedCloseUsd" />
+        </div>
+        <div class="form-group">
+          <label>Counted KHR (៛)</label>
+          <input type="number" step="100" class="form-input money-input" [(ngModel)]="countedCloseKhr" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="showCloseShiftModal.set(false)">Cancel</button>
+        <button type="button" class="btn btn-danger" (click)="confirmBlindCloseShift()">Submit &amp; Generate Z-Report</button>
+      </div>
+    </div>
+  </div>
+}

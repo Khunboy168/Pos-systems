@@ -1,0 +1,303 @@
+<div class="pos-app-wrapper" [attr.lang]="currentLang()">
+  <!-- Top Navigation Bar -->
+  <header class="top-nav no-print">
+    <div class="nav-left">
+      <div class="brand-badge">
+        <span class="brand-icon"><i class="fa-solid fa-mug-hot"></i></span>
+        <div class="brand-info">
+          <div class="brand-title">Brown Cafe &amp; Bistro</div>
+          <div class="brand-subtitle khmer-font">ហាងកាហ្វេ ប្រោន · Phnom Penh</div>
+        </div>
+      </div>
+
+      <nav class="nav-tabs">
+        <button
+          type="button"
+          class="nav-tab-btn"
+          [class.active]="activeTab() === 'inventory'"
+          (click)="activeTab.set('inventory')"
+        >
+          <i class="fa-solid fa-boxes-stacked tab-icon"></i>
+          <span class="tab-label">Product Information</span>
+        </button>
+
+        <button
+          type="button"
+          class="nav-tab-btn"
+          [class.active]="activeTab() === 'cashier'"
+          (click)="activeTab.set('cashier')"
+        >
+          <i class="fa-solid fa-cash-register tab-icon"></i>
+          <span class="tab-label">POS Terminal</span>
+        </button>
+
+        <button
+          type="button"
+          class="nav-tab-btn"
+          [class.active]="activeTab() === 'tables'"
+          (click)="activeTab.set('tables')"
+        >
+          <i class="fa-solid fa-chair tab-icon"></i>
+          <span class="tab-label">Floor Tables</span>
+        </button>
+
+        <button
+          type="button"
+          class="nav-tab-btn"
+          [class.active]="activeTab() === 'kitchen'"
+          (click)="activeTab.set('kitchen')"
+        >
+          <i class="fa-solid fa-kitchen-set tab-icon"></i>
+          <span class="tab-label">Kitchen (KDS)</span>
+          @if (productService.kitchenTickets().length > 0) {
+            <span class="badge-count">{{ productService.kitchenTickets().length }}</span>
+          }
+        </button>
+
+        <button
+          type="button"
+          class="nav-tab-btn"
+          [class.active]="activeTab() === 'shift'"
+          (click)="activeTab.set('shift')"
+        >
+          <i class="fa-solid fa-vault tab-icon"></i>
+          <span class="tab-label">Shifts &amp; Cash</span>
+        </button>
+
+        <button
+          type="button"
+          class="nav-tab-btn"
+          [class.active]="activeTab() === 'display'"
+          (click)="activeTab.set('display')"
+        >
+          <i class="fa-solid fa-desktop tab-icon"></i>
+          <span class="tab-label">Customer Display</span>
+        </button>
+
+        <button
+          type="button"
+          class="nav-tab-btn"
+          [class.active]="activeTab() === 'reports'"
+          (click)="activeTab.set('reports')"
+        >
+          <i class="fa-solid fa-chart-pie tab-icon"></i>
+          <span class="tab-label">Sales Reports</span>
+        </button>
+      </nav>
+    </div>
+
+    <div class="nav-right">
+      <!-- Shift Status Pill -->
+      <div class="shift-status-pill">
+        <span class="status-dot online"></span>
+        <span class="shift-info">Shift #{{ productService.currentShift()?.shiftNo || 1 }} · {{ productService.activeCashier() }}</span>
+      </div>
+
+      <!-- Exchange Rate Badge -->
+      <div class="rate-badge" title="Cambodia National Bank exchange rate">
+        <span class="rate-label">Rate:</span>
+        <span class="rate-value">$1 = {{ productService.exchangeRate().toLocaleString() }} ៛</span>
+      </div>
+
+      <!-- Language Switcher -->
+      <button type="button" class="lang-toggle-btn" (click)="toggleLanguage()">
+        <span class="lang-flag">{{ currentLang() === 'en' ? '🇰🇭' : '🇺🇸' }}</span>
+        <span class="lang-text">{{ currentLang() === 'en' ? 'ខ្មែរ' : 'EN' }}</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Modular Tab Views -->
+  <main class="main-content">
+    @switch (activeTab()) {
+      @case ('inventory') {
+        <app-product-table></app-product-table>
+      }
+      @case ('cashier') {
+        <app-pos-terminal
+          (orderCompleted)="handleOrderCompleted($event)"
+          (toastTriggered)="addToast($event.message, $event.type)"
+        ></app-pos-terminal>
+      }
+      @case ('tables') {
+        <app-table-floor
+          (tableSelected)="handleTableSelect($event)"
+          (toastTriggered)="addToast($event.message, $event.type)"
+        ></app-table-floor>
+      }
+      @case ('kitchen') {
+        <app-kds-board
+          (toastTriggered)="addToast($event.message, $event.type)"
+        ></app-kds-board>
+      }
+      @case ('shift') {
+        <app-shift-manager
+          (zReportGenerated)="handleZReportGenerated($event)"
+          (requestPinApproval)="promptManagerPin($event)"
+          (toastTriggered)="addToast($event.message, $event.type)"
+        ></app-shift-manager>
+      }
+      @case ('display') {
+        <app-customer-display></app-customer-display>
+      }
+      @case ('reports') {
+        <app-reports-view
+          (viewReceipt)="activeReceipt.set($event)"
+        ></app-reports-view>
+      }
+    }
+  </main>
+
+  <!-- 80mm Receipt Modal Component -->
+  @if (activeReceipt()) {
+    <app-receipt-modal
+      [receipt]="activeReceipt()"
+      (closed)="activeReceipt.set(null)"
+    ></app-receipt-modal>
+  }
+
+  <!-- Z-Report Modal -->
+  @if (showZReportModal()) {
+    <div class="modal-backdrop">
+      <div class="modal-card receipt-modal">
+        <div class="modal-header no-print">
+          <h3 class="modal-title">Shift Z-Report (Official Close)</h3>
+          <button type="button" class="close-x" (click)="showZReportModal.set(false)">✕</button>
+        </div>
+        <div class="receipt-container" id="printableZReport">
+          @if (activeZReport(); as z) {
+            <div class="receipt-header">
+              <div class="receipt-shop-name">BROWN CAFE &amp; BISTRO</div>
+              <div class="receipt-shop-km khmer-font">របាយការណ៍បិទវេន (Z-REPORT)</div>
+              <div class="receipt-sub">Shift #{{ z.shiftNo }} · Cashier: {{ z.cashierName }}</div>
+              <div class="receipt-sub">Opened: {{ z.openedAt }} · Closed: {{ z.closedAt }}</div>
+            </div>
+
+            <div class="receipt-divider">==========================================</div>
+
+            <div class="receipt-summary">
+              <div class="sum-row">
+                <span>Total Orders:</span>
+                <span>{{ z.orderCount }}</span>
+              </div>
+              <div class="sum-row total-usd">
+                <span>Total Sales USD:</span>
+                <span>${{ z.totalSalesUsd | number: '1.2-2' }}</span>
+              </div>
+              <div class="sum-row total-khr">
+                <span>Total Sales KHR:</span>
+                <span>{{ z.totalSalesKhr.toLocaleString() }} ៛</span>
+              </div>
+
+              <div class="receipt-divider">------------------------------------------</div>
+
+              <div class="sum-row">
+                <span>Open Float USD:</span>
+                <span>${{ z.openFloatUsd | number: '1.2-2' }}</span>
+              </div>
+              <div class="sum-row">
+                <span>Open Float KHR:</span>
+                <span>{{ z.openFloatKhr.toLocaleString() }} ៛</span>
+              </div>
+
+              <div class="receipt-divider">------------------------------------------</div>
+
+              <div class="sum-row">
+                <span>Expected USD:</span>
+                <span>${{ z.expectedUsd | number: '1.2-2' }}</span>
+              </div>
+              <div class="sum-row">
+                <span>Counted USD:</span>
+                <span>${{ z.countedUsd | number: '1.2-2' }}</span>
+              </div>
+              <div class="sum-row" [class.highlight]="(z.diffUsd || 0) !== 0">
+                <span>Difference USD:</span>
+                <span>${{ z.diffUsd | number: '1.2-2' }}</span>
+              </div>
+
+              <div class="receipt-divider">------------------------------------------</div>
+
+              <div class="sum-row">
+                <span>Expected KHR:</span>
+                <span>{{ z.expectedKhr?.toLocaleString() }} ៛</span>
+              </div>
+              <div class="sum-row">
+                <span>Counted KHR:</span>
+                <span>{{ z.countedKhr?.toLocaleString() }} ៛</span>
+              </div>
+              <div class="sum-row" [class.highlight]="(z.diffKhr || 0) !== 0">
+                <span>Difference KHR:</span>
+                <span>{{ z.diffKhr?.toLocaleString() }} ៛</span>
+              </div>
+            </div>
+
+            <div class="receipt-divider">==========================================</div>
+            <div class="receipt-footer">
+              <div>Manager Signature: __________________</div>
+            </div>
+          }
+        </div>
+        <div class="modal-footer no-print">
+          <button type="button" class="btn btn-secondary" (click)="showZReportModal.set(false)">Close</button>
+          <button type="button" class="btn btn-primary" (click)="printReceipt()">🖨️ Print Z-Report</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Manager PIN Security Modal -->
+  @if (showPinModal()) {
+    <div class="modal-backdrop">
+      <div class="modal-card pin-modal">
+        <div class="modal-header">
+          <h3 class="modal-title">Manager Approval Required</h3>
+          <button type="button" class="close-x" (click)="showPinModal.set(false)">✕</button>
+        </div>
+
+        <div class="modal-body pin-body">
+          <p class="pin-hint">Please enter Manager or Owner PIN (Try 2222 or 3333)</p>
+
+          <div class="pin-dots-row">
+            <span class="pin-dot" [class.filled]="pinInput().length >= 1"></span>
+            <span class="pin-dot" [class.filled]="pinInput().length >= 2"></span>
+            <span class="pin-dot" [class.filled]="pinInput().length >= 3"></span>
+            <span class="pin-dot" [class.filled]="pinInput().length >= 4"></span>
+          </div>
+
+          @if (pinError()) {
+            <div class="pin-error-text">{{ pinError() }}</div>
+          }
+
+          <div class="pin-keypad">
+            <button type="button" class="pin-key" (click)="appendPinDigit('1')">1</button>
+            <button type="button" class="pin-key" (click)="appendPinDigit('2')">2</button>
+            <button type="button" class="pin-key" (click)="appendPinDigit('3')">3</button>
+            <button type="button" class="pin-key" (click)="appendPinDigit('4')">4</button>
+            <button type="button" class="pin-key" (click)="appendPinDigit('5')">5</button>
+            <button type="button" class="pin-key" (click)="appendPinDigit('6')">6</button>
+            <button type="button" class="pin-key" (click)="appendPinDigit('7')">7</button>
+            <button type="button" class="pin-key" (click)="appendPinDigit('8')">8</button>
+            <button type="button" class="pin-key" (click)="appendPinDigit('9')">9</button>
+            <button type="button" class="pin-key key-clear" (click)="clearPin()">C</button>
+            <button type="button" class="pin-key" (click)="appendPinDigit('0')">0</button>
+            <button type="button" class="pin-key key-enter" (click)="verifyPin()">✓</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Toast Notification Center -->
+  <div class="toasts-container no-print">
+    @for (toast of toasts(); track toast.id) {
+      <div class="toast-item" [ngClass]="'toast-' + toast.type" (click)="dismissToast(toast.id)">
+        <span class="toast-icon">
+          @if (toast.type === 'success') { ✓ }
+          @else if (toast.type === 'danger') { ✕ }
+          @else { ℹ }
+        </span>
+        <span class="toast-msg">{{ toast.message }}</span>
+      </div>
+    }
+  </div>
+</div>

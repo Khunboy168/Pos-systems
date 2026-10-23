@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 160" width="100" height="160">
+  <defs>
+    <linearGradient id="matchaGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#2e7d32"/>
+      <stop offset="60%" stop-color="#4caf50"/>
+      <stop offset="85%" stop-color="#81c784"/>
+      <stop offset="100%" stop-color="#f1f8e9"/>
+    </linearGradient>
+  </defs>
+  <line x1="65" y1="5" x2="48" y2="140" stroke="#f59e0b" stroke-width="5" stroke-linecap="round"/>
+  <ellipse cx="50" cy="30" rx="36" ry="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+  <path d="M 20 34 L 28 140 Q 28 150 36 150 L 64 150 Q 72 150 72 140 L 80 34 Z" fill="url(#matchaGrad)"/>
+  <!-- Ice cubes -->
+  <rect x="32" y="50" width="16" height="16" rx="4" fill="#ffffff" opacity="0.35" transform="rotate(8 32 50)"/>
+  <rect x="52" y="70" width="16" height="16" rx="4" fill="#ffffff" opacity="0.35" transform="rotate(-15 52 70)"/>
+  <circle cx="50" cy="102" r="14" fill="#ffffff" opacity="0.95" stroke="#2e7d32" stroke-width="1.5"/>
+  <text x="50" y="105" font-family="Arial, sans-serif" font-size="6" font-weight="900" fill="#2e7d32" text-anchor="middle">MATCHA</text>
+  <path d="M 18 30 L 27 142 Q 28 152 38 152 L 62 152 Q 72 152 73 142 L 82 30 Z" fill="none" stroke="#e2e8f0" stroke-width="1.5"/>
+  <line x1="26" y1="40" x2="33" y2="135" stroke="#ffffff" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
+</svg>

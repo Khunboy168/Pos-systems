@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 160" width="100" height="160">
+  <defs>
+    <linearGradient id="cheeseBody" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fffde7"/>
+      <stop offset="70%" stop-color="#fff9c4"/>
+      <stop offset="100%" stop-color="#fff59d"/>
+    </linearGradient>
+    <linearGradient id="grahamCrust" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#d7ccc8"/>
+      <stop offset="100%" stop-color="#8d6e63"/>
+    </linearGradient>
+  </defs>
+  <!-- Plate -->
+  <ellipse cx="50" cy="115" rx="46" ry="25" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
+  <!-- Cheesecake triangular wedge -->
+  <!-- Bottom Crust -->
+  <path d="M 20 102 L 68 114 L 80 94 L 32 82 Z" fill="url(#grahamCrust)"/>
+  <!-- Cheesecake side -->
+  <path d="M 20 90 L 68 102 L 68 114 L 20 102 Z" fill="#ffe082"/>
+  <path d="M 68 102 L 80 82 L 80 94 L 68 114 Z" fill="#ffecb3"/>
+  <!-- Cheesecake top surface -->
+  <path d="M 20 90 L 68 102 L 80 82 L 32 70 Z" fill="url(#cheeseBody)"/>
+  <!-- Blueberry compote topping -->
+  <path d="M 40 76 Q 50 72 65 84 T 76 82 L 72 90 Q 60 88 50 82 Z" fill="#4a148c" opacity="0.9"/>
+  <circle cx="52" cy="78" r="4.5" fill="#311b92"/>
+  <circle cx="62" cy="82" r="4" fill="#1a237e"/>
+  <circle cx="44" cy="81" r="3.5" fill="#4a148c"/>
+  <!-- Mint leaf garnish -->
+  <path d="M 54 74 Q 60 64 64 68 Q 60 74 54 74 Z" fill="#4caf50"/>
+  <text x="50" y="145" font-family="'Times New Roman', serif" font-size="7" font-weight="bold" fill="#5d4037" text-anchor="middle">BLUEBERRY CHEESECAKE</text>
+</svg>

@@ -1,0 +1,97 @@
+<div class="kds-layout fade-in">
+  <div class="kds-top-bar">
+    <div class="kds-brand">
+      <span class="kds-title">Kitchen &amp; Bar Display System (KDS)</span>
+      <span class="kds-badge">Active Tickets: {{ filteredKitchenTickets().length }}</span>
+    </div>
+
+    <!-- Station Filter Tabs -->
+    <div class="kds-station-switch">
+      <button
+        type="button"
+        class="station-btn"
+        [class.active]="kdsStationFilter() === 'all'"
+        (click)="kdsStationFilter.set('all')"
+      >
+        All Stations
+      </button>
+      <button
+        type="button"
+        class="station-btn"
+        [class.active]="kdsStationFilter() === 'bar'"
+        (click)="kdsStationFilter.set('bar')"
+      >
+        <i class="fa-solid fa-mug-hot"></i> Barista Station
+      </button>
+      <button
+        type="button"
+        class="station-btn"
+        [class.active]="kdsStationFilter() === 'kitchen'"
+        (click)="kdsStationFilter.set('kitchen')"
+      >
+        <i class="fa-solid fa-utensils"></i> Food &amp; Bakery
+      </button>
+    </div>
+
+    <button type="button" class="btn-recall" (click)="recallLastTicket()">
+      <i class="fa-solid fa-rotate-left"></i> Recall Last Bumped
+    </button>
+  </div>
+
+  <!-- KDS Ticket Columns -->
+  <div class="kds-tickets-grid">
+    @for (ticket of filteredKitchenTickets(); track ticket.id) {
+      <div class="kds-ticket-card" [ngClass]="getTicketAgeClass(ticket.createdAtMs)">
+        <div class="ticket-header">
+          <div class="ticket-queue-no">#{{ ticket.orderNumber }}</div>
+          <div class="ticket-type-badge">{{ ticket.orderType }}</div>
+          @if (ticket.tableName) {
+            <div class="ticket-table-badge">{{ ticket.tableName }}</div>
+          }
+          <div class="ticket-age-timer">
+            <i class="fa-solid fa-clock"></i> {{ getTicketAgeMinutes(ticket.createdAtMs) }}m
+          </div>
+        </div>
+
+        <div class="ticket-station-indicator">
+          Station: <strong><i class="fa-solid" [ngClass]="ticket.station === 'bar' ? 'fa-mug-hot' : 'fa-utensils'"></i> {{ ticket.station === 'bar' ? 'BARISTA' : 'KITCHEN' }}</strong>
+        </div>
+
+        <div class="ticket-items-list">
+          @for (item of ticket.items; track item.cartItemId) {
+            <div class="kds-item-line">
+              <div class="kds-item-title">
+                <span class="kds-qty">{{ item.quantity }}×</span>
+                <span class="kds-name">{{ item.product.name }}</span>
+              </div>
+              @if (item.product.allowCustomization) {
+                <div class="kds-item-mods">
+                  <strong>{{ item.drinkType }} · {{ item.size }} · Sugar {{ item.sweetness }} · {{ item.ice }} Ice</strong>
+                  @for (add of item.addOns; track add.name) {
+                    <span class="kds-addon">+{{ add.name }}</span>
+                  }
+                  @if (item.notes) {
+                    <div class="kds-note">NOTE: {{ item.notes }}</div>
+                  }
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="ticket-footer">
+          <span class="ticket-server">{{ ticket.serverName }} · {{ ticket.timestamp }}</span>
+          <button type="button" class="btn-bump" (click)="bumpTicket(ticket)">
+            ✓ BUMP TICKET
+          </button>
+        </div>
+      </div>
+    } @empty {
+      <div class="kds-empty">
+        <span class="kds-empty-icon">🎉</span>
+        <h2>All clear! No pending orders.</h2>
+        <p>Tickets sent from the cashier terminal will appear here instantly.</p>
+      </div>
+    }
+  </div>
+</div>

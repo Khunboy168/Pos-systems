@@ -1,0 +1,153 @@
+.tables-layout {
+  display: flex;
+  flex-direction: column;
+}
+
+.tables-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.section-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+}
+
+.section-subtitle {
+  font-size: 0.825rem;
+  color: #64748b;
+  margin: 0.2rem 0 0 0;
+}
+
+.table-legend {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.775rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+.legend-dot.free { background: #16a34a; }
+.legend-dot.busy { background: #0284c7; }
+.legend-dot.bill { background: #d97706; }
+.legend-dot.reserved { background: #7c3aed; }
+
+.tables-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+
+.table-card {
+  background: #ffffff;
+  border: 2px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 1.15rem;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.15s ease;
+}
+
+.table-card.status-available { border-color: #86efac; }
+.table-card.status-occupied { border-color: #38bdf8; background: #f0f9ff; }
+.table-card.status-bill_printed { border-color: #fde68a; background: #fffbeb; }
+.table-card.status-reserved { border-color: #d8b4fe; background: #faf5ff; }
+
+.table-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.table-name {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.table-area-tag {
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: rgba(0, 0, 0, 0.06);
+  padding: 0.15rem 0.5rem;
+  border-radius: 9999px;
+}
+
+.table-card-body {
+  margin: 0.85rem 0 1rem;
+}
+
+.table-seats {
+  font-size: 0.8rem;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.table-bill-amount {
+  font-size: 1.45rem;
+  font-weight: 900;
+  color: #0284c7;
+  margin: 0.35rem 0 0.1rem;
+}
+
+.table-time {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.table-available-text {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #16a34a;
+  margin-top: 0.5rem;
+}
+
+.table-reserved-text {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #7c3aed;
+  margin-top: 0.5rem;
+}
+
+.table-card-footer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: auto;
+}
+
+.btn-table-action {
+  flex: 1;
+  padding: 0.45rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-open { background: #16a34a; color: #fff; }
+.btn-open:hover { background: #15803d; }
+.btn-order { background: #0284c7; color: #fff; }
+.btn-order:hover { background: #0369a1; }
+.btn-settle { background: #d97706; color: #fff; }
+.btn-settle:hover { background: #b45309; }
